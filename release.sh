@@ -58,7 +58,7 @@ git checkout --force main
 git fetch origin
 git rebase origin/main
 
-docker run -i \
+docker run -i --rm \
   -v "${PWD}:/src" \
   -u "${USER_ID}" \
   "apache/yetus:main" \
