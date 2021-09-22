@@ -41,12 +41,14 @@ sed -E -i "s,[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+,${VERSION},g" Formula/yetu
 
 URL=$(awk '/url/ {print $NF}' Formula/yetus.rb)
 URL=${URL//\"/}
+MIRRORURL=$(awk '/mirror/ {print $NF}' Formula/yetus.rb)
+MIRRORURL=${MIRRORURL//\"/}
 
-curl --location --fail --output "/tmp/yetus-binary.tgz" "${URL}"
+curl --location --fail --output "/tmp/yetus-binary.tgz" "${MIRRORURL}"
 
 
 if ! tar tzf /tmp/yetus-binary.tgz >/dev/null; then
-  echo "ERROR: Failed to download a tgz file from ${URL}"
+  echo "ERROR: Failed to download a tgz file from ${MIRRORURL}"
   exit 1
 fi
 

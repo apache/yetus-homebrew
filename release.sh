@@ -61,6 +61,7 @@ git rebase origin/main
 docker run -i --rm \
   -v "${PWD}:/src" \
   -u "${USER_ID}" \
+  -w /src \
   "apache/yetus:main" \
     ./update-homebrew.sh "${VERSION}"
 
