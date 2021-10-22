@@ -1,0 +1,30 @@
+# This workflow file generates binaries for both Windows
+# and OS X.  However, https://github.com/actions/upload-artifact/issues/38
+# that basically says that it won't ever preserve permissions.
+# That means an archive in an archive since we need to preserve them
+# on OS X.  Still... better than doing this all by hand.
+
+---
+
+name: homebrew-test
+
+on: [push]  # yamllint disable-line rule:truthy
+
+jobs:
+  testing-mac-10-15:
+    runs-on: macos-10.15
+    steps:
+      # This step is necessary because one of our dependencies
+      # conflicts with the Github image .
+      - name: install homebrew go
+        shell: bash
+        run: |
+          brew install go || true
+          brew link --overwrite go || true
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: tests
+        shell: bash
+        run: |
+          brew tap apache/yetus file://$(pwd)
+          brew install yetus --with-all

@@ -16,13 +16,14 @@
 #
 # Homebrew formula to install Apache Yetus
 class Yetus < Formula
+  license "Apache-2.0"
   desc "Enable contribution and release processes for software projects"
   homepage "https://yetus.apache.org/"
   url "https://dlcdn.apache.org/yetus/0.13.0/apache-yetus-0.13.0-bin.tar.gz"
   sha256 "a1022da63540ff9f722c9a4ab7b1dda5fb5a3d5faa2c3426d18582aed1f08a1e"
 
   option "with-all", "Build with all dependencies. Note that some dependencies such as "\
-    "Perl::Critic and checkmake still need to be installed manually."
+    "Go, Perl::Critic and checkmake still need to be installed manually."
 
   dependencies = [
     # programming languages
