@@ -42,7 +42,7 @@ sed -E -i "s,[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+,${VERSION},g" Formula/yetu
 URL=$(awk '/url/ {print $NF}' Formula/yetus.rb)
 URL=${URL//\"/}
 
-curl --location --fail --output "/tmp/yetus-binary.tgz" "${MIRRORURL}"
+curl --location --fail --output "/tmp/yetus-binary.tgz" "${URL}"
 
 
 if ! tar tzf /tmp/yetus-binary.tgz >/dev/null; then

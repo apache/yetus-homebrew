@@ -19,6 +19,10 @@
 
 USER_NAME=${SUDO_USER:=$USER}
 USER_ID=$(id -u "${USER_NAME}")
+GPG=$(command -v gpg)
+GPGAGENT=$(command -v gpg-agent)
+LOGDIR="/tmp/homebrew-sign.$$"
+mkdir -p "${LOGDIR}"
 
 usage() {
   cat <<EOF
@@ -29,6 +33,8 @@ EOF
 
 cleanup() {
   git checkout --force main
+  stopgpgagent
+  rm -rf "${LOGDIR}"
   exit 1
 }
 
@@ -47,9 +53,44 @@ verifyparams() {
   fi
 }
 
+startgpgagent()
+{
+    if [[ -n "${GPGAGENT}" && -z "${GPG_AGENT_INFO}" ]]; then
+      echo "starting gpg agent"
+      echo "default-cache-ttl 36000" > "${LOGDIR}/gpgagent.conf"
+      echo "max-cache-ttl 36000" >> "${LOGDIR}/gpgagent.conf"
+      # shellcheck disable=2046
+      eval $("${GPGAGENT}" --daemon \
+        --options "${LOGDIR}/gpgagent.conf" \
+        --log-file="${LOGDIR}/create-release-gpgagent.log")
+      GPGAGENTPID=$(pgrep "${GPGAGENT}")
+      GPG_AGENT_INFO="$HOME/.gnupg/S.gpg-agent:$GPGAGENTPID:1"
+      export GPG_AGENT_INFO
+    fi
+
+    if [[ -n "${GPG_AGENT_INFO}" ]]; then
+      echo "Warming the gpg-agent cache prior to calling maven"
+      # warm the agent's cache:
+      touch "${LOGDIR}/warm"
+      "${GPG}" --use-agent --armor --output "${LOGDIR}/warm.asc" --detach-sig "${LOGDIR}/warm"
+      rm "${LOGDIR}/warm.asc" "${LOGDIR}/warm"
+    else
+      yetus_error "ERROR: Unable to launch or acquire gpg-agent. Disable signing."
+    fi
+}
+
+stopgpgagent()
+{
+  if [[ -n "${GPGAGENTPID}" ]]; then
+    kill "${GPGAGENTPID}"
+  fi
+}
+
 verifyparams "$@"
 
 trap cleanup INT QUIT TRAP ABRT BUS SEGV TERM ERR
+
+startgpgagent
 
 set -x
 
@@ -62,7 +103,10 @@ docker run -i --rm \
   -v "${PWD}:/src" \
   -u "${USER_ID}" \
   -w /src \
-  "apache/yetus:main" \
+  "ghcr.io/apache/yetus:${VERSION}" \
     ./update-homebrew.sh "${VERSION}"
 
 git commit -a -S -m "${JIRAISSUE}. Release ${VERSION}"
+
+stopgpgagent
+rm -rf "${LOGDIR}"
