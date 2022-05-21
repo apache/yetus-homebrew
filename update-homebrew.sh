@@ -64,7 +64,7 @@ echo "Got SHA256: ${SHA256}"
 
 while read -r; do
   if [[ "${REPLY}" =~ sha256 ]]; then
-    echo "  sha256 \"${SHA256}\"" >> "${newfile}"
+    echo "  sha256 \"${SHA256}\" # pragma: allowlist secret" >> "${newfile}"
   else
     echo "${REPLY}" >> "${newfile}"
   fi
