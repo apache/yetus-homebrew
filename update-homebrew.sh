@@ -42,7 +42,7 @@ sed -E -i "s,[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+,${VERSION},g" Formula/yetu
 URL=$(awk '/url/ {print $NF}' Formula/yetus.rb)
 URL=${URL//\"/}
 
-curl --location --fail --output "/tmp/yetus-binary.tgz" "${MIRRORURL}"
+curl --location --fail --output "/tmp/yetus-binary.tgz" "${URL}"
 
 
 if ! tar tzf /tmp/yetus-binary.tgz >/dev/null; then
@@ -64,7 +64,7 @@ echo "Got SHA256: ${SHA256}"
 
 while read -r; do
   if [[ "${REPLY}" =~ sha256 ]]; then
-    echo "  sha256 \"${SHA256}\"" >> "${newfile}"
+    echo "  sha256 \"${SHA256}\" # pragma: allowlist secret" >> "${newfile}"
   else
     echo "${REPLY}" >> "${newfile}"
   fi
