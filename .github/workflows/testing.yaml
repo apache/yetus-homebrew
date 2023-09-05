@@ -19,6 +19,7 @@ jobs:
       - name: install homebrew go
         shell: bash
         run: |
+          brew unlink go || true
           brew install go || true
           brew link --overwrite go || true
       - name: checkout
@@ -28,3 +29,4 @@ jobs:
         run: |
           brew tap apache/yetus file://$(pwd)
           brew install yetus --with-all --overwrite
+          test-patch --empty-patch --build-tool=nobuild --plugins=all
