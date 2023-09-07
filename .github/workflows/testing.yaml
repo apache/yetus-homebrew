@@ -11,20 +11,22 @@ name: homebrew-test
 on: [push]  # yamllint disable-line rule:truthy
 
 jobs:
-  testing-mac-10-15:
-    runs-on: macos-10.15
+  testing-macos:
+    runs-on: macos-11
     steps:
       # This step is necessary because one of our dependencies
       # conflicts with the Github image .
       - name: install homebrew go
         shell: bash
         run: |
+          brew unlink go || true
           brew install go || true
           brew link --overwrite go || true
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: tests
         shell: bash
         run: |
           brew tap apache/yetus file://$(pwd)
           brew install yetus --with-all --overwrite
+          test-patch --empty-patch --build-tool=nobuild --plugins=all
