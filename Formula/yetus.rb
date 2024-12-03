@@ -28,7 +28,7 @@ class Yetus < Formula
   dependencies = [
     # programming languages
     "go",
-    "openjdk@8",
+    "openjdk",
     "scala",
 
     # build tools
