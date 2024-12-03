@@ -37,6 +37,7 @@ class Yetus < Formula
     "automake",
     "bash",
     "cmake",
+    "diffutils",
     "libtool",
     "git",
     "gradle",
