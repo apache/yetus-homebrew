@@ -12,7 +12,7 @@ on: [push]  # yamllint disable-line rule:truthy
 
 jobs:
   testing-macos:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       # This step is necessary because one of our dependencies
       # conflicts with the Github image .
