@@ -19,8 +19,8 @@ class Yetus < Formula
   license "Apache-2.0"
   desc "Enable contribution and release processes for software projects"
   homepage "https://yetus.apache.org/"
-  url "https://dlcdn.apache.org/yetus/0.15.0/apache-yetus-0.15.0-bin.tar.gz"
-  sha256 "445f9b979c97f3dbfc9582ffbc930b62a95ae426e4ff45fe0f60bfa0b77559f4" # pragma: allowlist secret
+  url "https://dlcdn.apache.org/yetus/0.15.1/apache-yetus-0.15.1-bin.tar.gz"
+  sha256 "093bc132efa63f524975fd9c8b1e7aaf4b093754647c83a0623f80438553ae3c" # pragma: allowlist secret
 
   option "with-all", "Build with all dependencies. Note that some dependencies such as "\
     "Go, Perl::Critic and checkmake still need to be installed manually."
