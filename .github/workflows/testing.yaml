@@ -23,7 +23,7 @@ jobs:
           brew install go || true
           brew link --overwrite go || true
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: tests
         shell: bash
         run: |
